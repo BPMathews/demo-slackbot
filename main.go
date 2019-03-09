@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	env.PrintVersion()
+	env.Load()
 }

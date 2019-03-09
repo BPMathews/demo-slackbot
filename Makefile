@@ -1,8 +1,10 @@
 MAKEFLAGS += --silent
 
-# Define the environment
+# Environment Vars
 ENV_FILE := dev.env
-PROJECT_NAME := $(shell basename -s .git `git config --get remote.origin.url`)
+PROJECT_PATH := $(shell git config --get remote.origin.url | sed -e 's/.git//; s/git@//; s/:[^/]*//')
+PROJECT_NAME := $(shell basename $(PROJECT_PATH))
+PROJECT_SOURCE = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
 GOBIN := ${GOPATH}/bin
 PWD := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
@@ -39,22 +41,33 @@ help:
 run: build
 	./${PROJECT_NAME}
 
+## test: Test the application.
+test: build
+	echo "Testing '${PROJECT_NAME}'..."
+	go test ./... -coverprofile=unit-test-coverage.out
+	go tool cover -html=unit-test-coverage.out
+	echo
+
 # Non-User make targets
 vendor: ${GOBIN}/dep Gopkg.toml
 	echo "Pulling dependencies..."
 	dep ensure -v
+	echo
 
 ${GOBIN}/dep:
 	echo "Installing 'Dep'"
 	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+	echo
 
-${PROJECT_NAME}: Makefile vendor *.go
+${PROJECT_NAME}: Makefile vendor ${PROJECT_SOURCE}
 	echo "Building '${PROJECT_NAME}'..."
 	go fmt ./...
-	go build -ldflags='$(LINKER_FLAGS)' -o ${PROJECT_NAME}
+	go build -ldflags='$(LINKER_FLAGS)' -v -o ${PROJECT_NAME}
+	echo
 
 # Demo Targets
 deep-clean: clean
-	rm ${GOBIN}/dep
+	rm -rf ${GOBIN}/dep
+	rm -rf ${GOBIN}/gocov
 
-.PHONY: build clean deep-clean help run
+.PHONY: build clean deep-clean help run test
