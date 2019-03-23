@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bitbucket.org/BPMathews/fitness-slackbot/env"
+	"bitbucket.org/BPMathews/demo-slackbot/env"
 )
 
 func main() {

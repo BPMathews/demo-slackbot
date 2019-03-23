@@ -1,5 +1,6 @@
 vendor
 Gopkg.lock
 dist
+demo-slackbot
 *.env
 *.out
