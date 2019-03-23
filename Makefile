@@ -1,7 +1,8 @@
 MAKEFLAGS += --silent
 
 ENV_FILE := dev.env
--include ENV_FILE
+-include ${ENV_FILE}
+export
 
 # Environment Vars
 PROJECT_PATH := $(shell git config --get remote.origin.url | sed -e 's/.git//; s/git@//; s/:/\//')

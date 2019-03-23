@@ -2,8 +2,9 @@ package main
 
 import (
 	"bitbucket.org/BPMathews/demo-slackbot/env"
+	"bitbucket.org/BPMathews/demo-slackbot/slack"
 )
 
 func main() {
-	env.Load()
+	slack.Start(env.SlackBotSettings.Token)
 }
