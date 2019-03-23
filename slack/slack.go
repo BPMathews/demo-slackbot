@@ -36,10 +36,8 @@ func Start(token string) {
 				Username: env.SlackBotSettings.Name,
 				IconURL:  env.SlackBotSettings.ImageURL,
 			}
-			api.PostMessage(ev.Channel, "I'm a Robot!", apiOutgoing)
 
-			//outgoingMessage := rtm.NewOutgoingMessage("Hello!", ev.Channel)
-			//rtm.SendMessage(outgoingMessage)
+			api.PostMessage(ev.Channel, "I'm a Robot!", apiOutgoing)
 		}
 	}
 }
