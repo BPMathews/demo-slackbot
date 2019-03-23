@@ -20,9 +20,9 @@ BUILD_VERSION := $(shell git describe --always --dirty)
 DOCKER_IMAGE := $(PROJECT_NAME):$(BUILD_BRANCH)
 
 # Linker Flags
-LINKER_FLAGS := -X '\''$(PROJECT_PATH)/env.Version=$(BUILD_VERSION)'\''
-LINKER_FLAGS += -X '\''$(PROJECT_PATH)/env.Branch=$(BUILD_BRANCH)'\''
-LINKER_FLAGS += -X '\''$(PROJECT_PATH)/env.BuildTime=$(BUILD_TIME)'\''
+LINKER_FLAGS := -X '\''$(PROJECT_PATH)/env.version=$(BUILD_VERSION)'\''
+LINKER_FLAGS += -X '\''$(PROJECT_PATH)/env.branch=$(BUILD_BRANCH)'\''
+LINKER_FLAGS += -X '\''$(PROJECT_PATH)/env.buildTime=$(BUILD_TIME)'\''
 
 all: help
 

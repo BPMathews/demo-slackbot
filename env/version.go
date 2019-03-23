@@ -5,14 +5,14 @@ import (
 )
 
 var (
-	Branch    string
-	BuildTime string
-	Version   string
+	branch    string
+	buildTime string
+	version   string
 )
 
-func PrintVersion() {
+func printVersion() {
 	fmt.Println("Build Info:")
-	fmt.Println(fmt.Sprintf("\tBranch:\t\t%s", Branch))
-	fmt.Println(fmt.Sprintf("\tBuild Time:\t%s", BuildTime))
-	fmt.Println(fmt.Sprintf("\tVersion:\t%s", Version))
+	fmt.Println(fmt.Sprintf("\tBranch:\t\t%s", branch))
+	fmt.Println(fmt.Sprintf("\tBuild Time:\t%s", buildTime))
+	fmt.Println(fmt.Sprintf("\tVersion:\t%s", version))
 }

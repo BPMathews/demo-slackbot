@@ -5,7 +5,7 @@ var (
 )
 
 func init() {
-	PrintVersion()
+	printVersion()
 }
 
 func Load() {
