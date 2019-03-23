@@ -1,11 +1,14 @@
 MAKEFLAGS += --silent
 
-# Environment Vars
 ENV_FILE := dev.env
-PROJECT_PATH := $(shell git config --get remote.origin.url | sed -e 's/.git//; s/git@//; s/:[^/]*//')
+-include ENV_FILE
+
+# Environment Vars
+PROJECT_PATH := $(shell git config --get remote.origin.url | sed -e 's/.git//; s/git@//; s/:/\//')
 PROJECT_NAME := $(shell basename $(PROJECT_PATH))
 PROJECT_SOURCE = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
 GOBIN := ${GOPATH}/bin
+GOCACHE := /tmp/gocache
 PWD := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 # Build Vars
@@ -13,10 +16,13 @@ BUILD_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 BUILD_TIME := $(shell date)
 BUILD_VERSION := $(shell git describe --always --dirty)
 
+# Docker Vars
+DOCKER_IMAGE := $(PROJECT_NAME):$(BUILD_BRANCH)
+
 # Linker Flags
-LINKER_FLAGS := -X '\''$(PROJECT_NAME)/env.Version=$(BUILD_VERSION)'\''
-LINKER_FLAGS += -X '\''$(PROJECT_NAME)/env.Branch=$(BUILD_BRANCH)'\''
-LINKER_FLAGS += -X '\''$(PROJECT_NAME)/env.BuildTime=$(BUILD_TIME)'\''
+LINKER_FLAGS := -X '\''$(PROJECT_PATH)/env.Version=$(BUILD_VERSION)'\''
+LINKER_FLAGS += -X '\''$(PROJECT_PATH)/env.Branch=$(BUILD_BRANCH)'\''
+LINKER_FLAGS += -X '\''$(PROJECT_PATH)/env.BuildTime=$(BUILD_TIME)'\''
 
 all: help
 
@@ -29,6 +35,9 @@ clean:
 	rm -rf vendor
 	rm -f Gopkg.lock
 	go clean -x
+
+docker:
+	echo ${DOCKER_IMAGE}
 
 ## help: Print out a list of available build targets.
 help:
@@ -62,6 +71,7 @@ ${GOBIN}/dep:
 ${PROJECT_NAME}: Makefile vendor ${PROJECT_SOURCE}
 	echo "Building '${PROJECT_NAME}'..."
 	go fmt ./...
+	go vet ./...
 	go build -ldflags='$(LINKER_FLAGS)' -v -o ${PROJECT_NAME}
 	echo
 
@@ -70,4 +80,4 @@ deep-clean: clean
 	rm -rf ${GOBIN}/dep
 	rm -rf ${GOBIN}/gocov
 
-.PHONY: build clean deep-clean help run test
+.PHONY: build clean deep-clean help run test vet

@@ -1,3 +1,5 @@
 vendor
 Gopkg.lock
 dist
+*.env
+*.out
