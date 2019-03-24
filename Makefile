@@ -5,12 +5,12 @@ ENV_FILE := dev.env
 export
 
 # Environment Vars
-PROJECT_PATH := $(shell git config --get remote.origin.url | sed -e 's/.git//; s/git@//; s/:/\//')
+PWD := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+PROJECT_PATH := $(shell sed -n 's/^module //p' $(PWD)/go.mod)
 PROJECT_NAME := $(shell basename $(PROJECT_PATH))
 PROJECT_SOURCE = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
 GOBIN := ${GOPATH}/bin
 GOCACHE := /tmp/gocache
-PWD := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 
 # Build Vars
 BUILD_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
