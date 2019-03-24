@@ -5,6 +5,5 @@ pipelines:
     - step:
         services:
           - docker
-        script: 
-          - docker build -t $IMAGE_NAME .
-
+        script:
+          - make docker
