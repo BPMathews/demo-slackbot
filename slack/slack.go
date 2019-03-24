@@ -37,7 +37,11 @@ func Start(token string) {
 				IconURL:  env.SlackBotSettings.ImageURL,
 			}
 
-			api.PostMessage(ev.Channel, "Hi, I'm a Robot!", apiOutgoing)
+			if strings.Contains(ev.Msg.Text, "info") {
+				api.PostMessage(ev.Channel, env.Version(), apiOutgoing)
+			} else {
+				api.PostMessage(ev.Channel, "Hi, I'm a Robot!", apiOutgoing)
+			}
 		}
 	}
 }
