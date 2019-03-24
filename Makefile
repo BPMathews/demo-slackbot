@@ -43,6 +43,7 @@ docker:
 	docker build -t $(DOCKER_IMAGE) -f docker/Dockerfile .
 
 run-docker: docker
+	echo "Starting '${PROJECT_NAME}' in Docker..."
 	docker run --rm --env-file $(ENV_FILE) -p 8080:8080 $(DOCKER_IMAGE)
 
 ## help: Print out a list of available build targets.
