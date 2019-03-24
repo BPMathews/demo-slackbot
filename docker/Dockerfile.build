@@ -1,0 +1,2 @@
+FROM golang:1.12.1-alpine
+RUN apk add --no-cache git mercurial curl make gcc g++

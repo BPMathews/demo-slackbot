@@ -1,4 +1,4 @@
-MAKEFLAGS += --silent
+#MAKEFLAGS += --silent
 
 ENV_FILE := dev.env
 -include ${ENV_FILE}
@@ -18,7 +18,9 @@ BUILD_TIME := $(shell date)
 BUILD_VERSION := $(shell git describe --always --dirty)
 
 # Docker Vars
+DOCKER_NETWORK_NAME := slackbot-network
 DOCKER_IMAGE := $(PROJECT_NAME):$(BUILD_BRANCH)
+DOCKER_BUILD_IMAGE := $(PROJECT_NAME)-build:build
 
 # Linker Flags
 LINKER_FLAGS := -X '\''$(PROJECT_PATH)/env.version=$(BUILD_VERSION)'\''
@@ -38,7 +40,12 @@ clean:
 	go clean -x
 
 docker:
-	echo ${DOCKER_IMAGE}
+	docker build -t $(DOCKER_BUILD_IMAGE) -f docker/Dockerfile.build .
+	docker run --rm -v "$(PWD)":/go/src/$(PROJECT_PATH) -w /go/src/$(PROJECT_PATH) $(DOCKER_BUILD_IMAGE) sh -c 'make build'
+	docker build -t $(DOCKER_IMAGE) -f docker/Dockerfile .
+
+run-docker: docker
+	docker run --rm --env-file $(ENV_FILE) -p 8080:8080 $(DOCKER_IMAGE)
 
 ## help: Print out a list of available build targets.
 help:
@@ -81,4 +88,4 @@ deep-clean: clean
 	rm -rf ${GOBIN}/dep
 	rm -rf ${GOBIN}/gocov
 
-.PHONY: build clean deep-clean help run test vet
+.PHONY: build clean deep-clean docker run-docker help run test vet
