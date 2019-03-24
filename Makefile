@@ -35,8 +35,6 @@ build: ${PROJECT_NAME}
 ## clean: Remove all build atrifacts and generated files.
 clean:
 	rm -f ${PROJECT_NAME}
-	rm -rf vendor
-	rm -f Gopkg.lock
 	go clean -x
 
 docker:
@@ -65,18 +63,7 @@ test: build
 	go tool cover -html=unit-test-coverage.out
 	echo
 
-# Non-User make targets
-vendor: ${GOBIN}/dep Gopkg.toml
-	echo "Pulling dependencies..."
-	dep ensure -v
-	echo
-
-${GOBIN}/dep:
-	echo "Installing 'Dep'"
-	curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-	echo
-
-${PROJECT_NAME}: Makefile vendor ${PROJECT_SOURCE}
+${PROJECT_NAME}: Makefile go.mod ${PROJECT_SOURCE}
 	echo "Building '${PROJECT_NAME}'..."
 	go fmt ./...
 	go vet ./...
@@ -85,7 +72,6 @@ ${PROJECT_NAME}: Makefile vendor ${PROJECT_SOURCE}
 
 # Demo Targets
 deep-clean: clean
-	rm -rf ${GOBIN}/dep
 	rm -rf ${GOBIN}/gocov
 
 .PHONY: build clean deep-clean docker run-docker help run test vet

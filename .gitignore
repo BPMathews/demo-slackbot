@@ -1,5 +1,5 @@
 vendor
-Gopkg.lock
+go.sum
 dist
 demo-slackbot
 *.env
