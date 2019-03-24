@@ -1,4 +1,4 @@
-#MAKEFLAGS += --silent
+MAKEFLAGS += --silent
 
 ENV_FILE := dev.env
 -include ${ENV_FILE}
