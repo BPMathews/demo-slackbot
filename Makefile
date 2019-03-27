@@ -37,11 +37,13 @@ clean:
 	rm -f ${PROJECT_NAME}
 	go clean -x
 
+## docker: Build a application in container.
 docker:
 	docker build -t $(DOCKER_BUILD_IMAGE) -f docker/Dockerfile.build .
 	docker run --rm -v "$(PWD)":/go/src/$(PROJECT_PATH) -w /go/src/$(PROJECT_PATH) $(DOCKER_BUILD_IMAGE) sh -c 'make build'
 	docker build -t $(DOCKER_IMAGE) -f docker/Dockerfile .
 
+## run-docker: Build and run the application on the local Docker server.
 run-docker: docker
 	echo "Starting '${PROJECT_NAME}' in Docker..."
 	docker run --rm --env-file $(ENV_FILE) -p 8080:8080 $(DOCKER_IMAGE)
